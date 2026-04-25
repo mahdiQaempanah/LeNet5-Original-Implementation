@@ -1,0 +1,15 @@
+# config.yaml
+model:
+  A: 1.7159
+  S: 0.6666666666
+
+paths:
+  rbf_file_format: "../static/RBF_kernel/{id}_RBF.jpg"
+  dataset_dir: "../static/dataset/"
+
+training:
+  lr: 0.005
+  batch_size: 1024
+  num_epochs: 30
+  device: "cuda"
+  shuffle: true
