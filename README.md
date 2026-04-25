@@ -30,4 +30,8 @@ pip install torch torchvision numpy prettytable matplotlib scikit-learn
     python src/main.py
 ```
 ## 🧠 Key Insights
-The model utilizes a "penalty-based" approach. Predictions are made by finding the minimum energy (distance) in the output vector:$$ \text{prediction} = \arg\min(\text{output}) $$
+The model uses a **penalty-based approach**. Predictions are made by selecting the class with the **minimum energy (distance)** in the output vector:
+
+$$
+\text{prediction} = \arg\min(\text{output})
+$$
