@@ -10,6 +10,7 @@ class ModelConfig(BaseModel):
 class PathsConfig(BaseModel):
     rbf_file_format: str
     dataset_dir: str
+    run_summary_dir: str
 
 class TrainingConfig(BaseModel):
     lr: float
@@ -17,6 +18,7 @@ class TrainingConfig(BaseModel):
     num_epochs: int
     shuffle: bool
     num_workers: int
+    training_size: int
 
 class AppConfig(BaseModel):
     model: ModelConfig
@@ -27,7 +29,7 @@ class AppConfig(BaseModel):
 class ConfigHandler:
     
     @staticmethod
-    def load_config(path: str = "../config.yaml") -> AppConfig:
+    def load_config(path: str = "config.yaml") -> AppConfig:
         with open(path, "r") as f:
             raw = yaml.safe_load(f)
 

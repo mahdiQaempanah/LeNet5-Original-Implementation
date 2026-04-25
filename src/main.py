@@ -65,7 +65,7 @@ class BaseModel(nn.Module):
             self.apply(register_hook)
         else:
             for name, module in self.named_children():
-                 self._tmp_hook_summary.append(module.register_full_backward_hook(make_hook(name)))
+                 self._tmp_hook_summary.append(module.register_forward_hook(make_hook(name)))
 
         self(*x_input)
         for h in self._tmp_hook_summary:
@@ -349,7 +349,7 @@ def train():
     mnist_train = tv.datasets.MNIST(config.paths.dataset_dir, download=True, train=True, transform=transform)
     mnist_test = tv.datasets.MNIST(config.paths.dataset_dir, transform=transform)
 
-    mnist_train = Subset(mnist_train, np.random.choice(60000, 20000, replace=False))
+    mnist_train = Subset(mnist_train, np.random.choice(len(mnist_train), config.training.training_size, replace=False))
     
     mnist_train_loader = torch.utils.data.DataLoader(mnist_train, batch_size=config.training.batch_size, shuffle=config.training.shuffle, num_workers=config.training.num_workers)
     mnist_test_loader = torch.utils.data.DataLoader(mnist_test, batch_size=config.training.batch_size, num_workers=config.training.num_workers)
@@ -360,7 +360,7 @@ def train():
     
     model.train()
     model.enter_training_summary(recurse=False, run_summary_dir=config.paths.run_summary_dir)
-    model.layers_summary(input_size=(1, 32, 32), device='cpu')
+    model.layers_summary(input_size=(1, 32, 32), device='cpu', recurse=False)
     step = 0
     for epoch in range(config.training.num_epochs):
         for X, y in mnist_train_loader:

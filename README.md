@@ -49,8 +49,6 @@ Because the output layer is based on Radial Basis Functions (RBF), the model out
 $$ \text{prediction} = \arg\min(\text{output}) $$
 
 ## 📈 Monitoring with TensorBoard
-![TensorBoard Preview](static/assets/tensorboard_preview.png)
-
 This implementation includes a built-in training summary tool to visualize the network's internal dynamics in real-time.
 What is tracked?
 Activations (Forward Pass): Mean, Max, Min, and Standard Deviation of outputs for every layer (C1 through F6).
@@ -65,6 +63,8 @@ tensorboard --logdir=runs/
 Open your browser and navigate to http://localhost:6006.
 
 ### Example Dashboard
+![TensorBoard Preview](static/assets/tensorboard_preview.png)
+
 The dashboard allows you to compare the "energy" of different layers. You should see the standard deviation of your activations staying relatively stable across layers if the initialization is correct.
 
 ## 📜 References
