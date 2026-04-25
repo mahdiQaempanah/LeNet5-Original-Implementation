@@ -312,27 +312,6 @@ class LeNet5(BaseModel):
         assert tuple(X.shape) == (batch_size, 10)
         assert sum(p.numel() for p in self.OUTPUT.parameters()) == 0
         
-        
-class ShitNet(BaseModel):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.layer = nn.Sequential(nn.Conv2d(1, 6, (5, 5)), 
-                                   nn.ReLU(), 
-                                   nn.Conv2d(6, 12, (5, 5)),
-                                   nn.MaxPool2d((2, 2), stride=2),
-                                   nn.ReLU(),
-                                   nn.Conv2d(12, 4, (5, 5)),
-                                   nn.MaxPool2d((2, 2), stride=2),
-                                   nn.Flatten(),
-                                   nn.ReLU(),
-                                   nn.Linear(64, 10))
-        
-    def forward(self, X):
-        return self.layer(X)
-                                   
-                                   
-        
-        
     
 def criterion(y_predict, y_actual, j=0.1):
     correct_class_energy = y_predict.gather(1, y_actual.view(-1, 1)).squeeze()
