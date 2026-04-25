@@ -100,14 +100,14 @@ class BaseModel(nn.Module):
         return 1 / (1 + np.exp(-10*x))
         
     
-    def enter_training_summary(self, recurse=True):
+    def enter_training_summary(self, recurse=True, run_summary_dir='../runs/experiment_1/'):
         if recurse == True:
             raise NotImplementedError()
         
         setattr(self, '_tmp_training_summary', defaultdict(dict))
         setattr(self, '_tmp_training_summary_hooks', [])
         setattr(self, '_tmp_training_summary_step', 0)
-        setattr(self, '_tmp_training_summary_tensorboard_writer', SummaryWriter('../runs/experiment_1'))
+        setattr(self, '_tmp_training_summary_tensorboard_writer', SummaryWriter(run_summary_dir))
         
         def make_forward_hook(name):
             def forward_hook(module, input, output, name=name):
@@ -234,17 +234,17 @@ class ScaledTanh(nn.Module):
         return self.A*self.Tanh(self.S*X) 
 
 class LeNet5(BaseModel):
-    def __init__(self):
+    def __init__(self, A=1.7159, S=2/3):
         super().__init__()
-        self.a = float(config.model.A)
-        self.s = float(config.model.S)
+        self.a = float(A)
+        self.s = float(S)
         
-        self.C1 = nn.Sequential(nn.Conv2d(1, 6, (5, 5)), ScaledTanh())
-        self.S2 = nn.Sequential(LinearSubSample(6, (2,2), 2), ScaledTanh())
-        self.C3 = nn.Sequential(Custom1InChannelSubsetConv2d(), ScaledTanh())
-        self.S4 = nn.Sequential(LinearSubSample(16, (2,2), 2), ScaledTanh())
-        self.C5 = nn.Sequential(nn.Conv2d(16, 120, (5, 5)), ScaledTanh())
-        self.F6 = nn.Sequential(nn.Flatten(), nn.Linear(120, 84), ScaledTanh())
+        self.C1 = nn.Sequential(nn.Conv2d(1, 6, (5, 5)), ScaledTanh(A=self.a, S=self.s))
+        self.S2 = nn.Sequential(LinearSubSample(6, (2,2), 2), ScaledTanh(A=self.a, S=self.s))
+        self.C3 = nn.Sequential(Custom1InChannelSubsetConv2d(), ScaledTanh(A=self.a, S=self.s))
+        self.S4 = nn.Sequential(LinearSubSample(16, (2,2), 2), ScaledTanh(A=self.a, S=self.s))
+        self.C5 = nn.Sequential(nn.Conv2d(16, 120, (5, 5)), ScaledTanh(A=self.a, S=self.s))
+        self.F6 = nn.Sequential(nn.Flatten(), nn.Linear(120, 84), ScaledTanh(A=self.a, S=self.s))
         self.OUTPUT = nn.Sequential(Custome1RBF())
         self.init_params()
 
@@ -351,15 +351,15 @@ def train():
 
     mnist_train = Subset(mnist_train, np.random.choice(60000, 20000, replace=False))
     
-    mnist_train_loader = torch.utils.data.DataLoader(mnist_train, batch_size=config.training.batch_size, shuffle=config.training.shuffle, num_workers=10)
-    mnist_test_loader = torch.utils.data.DataLoader(mnist_test, batch_size=config.training.batch_size)
+    mnist_train_loader = torch.utils.data.DataLoader(mnist_train, batch_size=config.training.batch_size, shuffle=config.training.shuffle, num_workers=config.training.num_workers)
+    mnist_test_loader = torch.utils.data.DataLoader(mnist_test, batch_size=config.training.batch_size, num_workers=config.training.num_workers)
     
-    model = LeNet5()
+    model = LeNet5(A=config.model.A, S=config.model.S)
     optimizer = torch.optim.Adam(model.parameters(), lr=config.training.lr)
     
     
     model.train()
-    model.enter_training_summary(recurse=False)
+    model.enter_training_summary(recurse=False, run_summary_dir=config.paths.run_summary_dir)
     model.layers_summary(input_size=(1, 32, 32), device='cpu')
     step = 0
     for epoch in range(config.training.num_epochs):

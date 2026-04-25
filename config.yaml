@@ -6,10 +6,11 @@ model:
 paths:
   rbf_file_format: "../static/RBF_kernel/{id}_RBF.jpg"
   dataset_dir: "../static/dataset/"
+  run_summary_dir: "../runs/experiment_1/"
 
 training:
   lr: 0.005
   batch_size: 1024
   num_epochs: 30
-  device: "cuda"
   shuffle: true
+  num_workers: 10

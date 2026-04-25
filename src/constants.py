@@ -15,9 +15,9 @@ class TrainingConfig(BaseModel):
     lr: float
     batch_size: int
     num_epochs: int
-    device: str
     shuffle: bool
-    
+    num_workers: int
+
 class AppConfig(BaseModel):
     model: ModelConfig
     paths: PathsConfig
