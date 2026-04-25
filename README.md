@@ -26,7 +26,7 @@ To avoid dependency conflicts, it is recommended to use a clean virtual environm
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/YOUR_USERNAME/LeNet5-Original-Implementation.git](https://github.com/YOUR_USERNAME/LeNet5-Original-Implementation.git)
+   git clone https://github.com/mahdiQaempanah/LeNet5-Original-Implementation
    cd LeNet5-Original-Implementation
    ```
 
